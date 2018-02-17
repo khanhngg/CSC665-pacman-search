@@ -18,7 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
-
+import node
 
 class SearchProblem:
     """
@@ -80,16 +80,25 @@ def graphSearch(problem, fringe):
     fringe should be an empty queue.
     """
     startstate = problem.getStartState()
-    fringe.push(Node(problem.getStartState()))
+    fringe.push(node.Node(problem.getStartState()))
     try:
         startstate.__hash__()
         visited = set()
     except:
         visited = list()
     while not fringe.isEmpty():
-        """
-        Code here is hidden. Insert your answer here.
-        """
+        current_node = fringe.pop()
+
+        "If the node contains a goal state, returns the corresponding solution"
+        if problem.isGoalState(current_node.state):
+            return [ curr.action for curr in current_node.nodePath()[1:]]
+
+        "Expands the node and add the resulting nodes to search tree"
+        if current_node.state not in visited:
+            visited.add(current_node.state)
+            for node_to_expand in current_node.expand(problem):
+                if node_to_expand.state not in visited:
+                    fringe.push(node_to_expand)
     return None
 
 
@@ -108,19 +117,22 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+    return graphSearch(problem, util.Stack())
     util.raiseNotDefined()
 
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    return graphSearch(problem, util.Queue())
     util.raiseNotDefined()
 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return graphSearch(problem, util.PriorityQueueWithFunction( 
+        lambda current_node: current_node.path_cost  ))
 
 
 def nullHeuristic(state, problem=None):
@@ -134,6 +146,9 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    # total_cost = (lambda state: len(problem.getStartState()) + heuristic(state))
+    total_cost = (lambda state: len(problem.getStartState()) + heuristic(state))
+    return graphSearch(problem, util.PriorityQueueWithFunction( total_cost ))
     util.raiseNotDefined()
 
 
