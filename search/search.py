@@ -116,20 +116,17 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    "*** YOUR CODE HERE ***"
     return graphSearch(problem, util.Stack())
 
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
     return graphSearch(problem, util.Queue())
 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    return graphSearch(problem, util.PriorityQueueWithFunction( 
+    return graphSearch(problem, util.PriorityQueueWithFunction(
         lambda current_node: current_node.path_cost ))
 
 
@@ -143,7 +140,6 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
     return graphSearch(problem, util.PriorityQueueWithFunction(
         lambda current_node: current_node.path_cost + heuristic(current_node.state, problem) ))
 
