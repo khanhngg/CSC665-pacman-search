@@ -378,19 +378,14 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***"
     closest_goal_distance = sys.maxint
-    closest_goal_state = None
 
-    for goal in problem.goals:
-        if not goal[state]:
-            current_distance = manhattanHeuristic(state, goal)
+    for corner in corners:
+        if not corner in state[1]:
+            current_distance = abs(state[0][0] - corner[0]) + abs(state[0][1] - corner[1])
             if closest_goal_distance > current_distance:
-                goal[state] = True
-                closest_goal_state = goal
                 closest_goal_distance = current_distance
 
     return closest_goal_distance
-
-    # return 0 # Default to trivial solution
 
 
 class AStarCornersAgent(SearchAgent):
