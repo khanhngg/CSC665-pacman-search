@@ -91,14 +91,30 @@ def graphSearch(problem, fringe):
 
         "If the node contains a goal state, returns the corresponding solution"
         if problem.isGoalState(current_node.state):
-            return [ curr.action for curr in current_node.nodePath()[1:]]
+            return [curr.action for curr in current_node.nodePath()[1:]]
 
-        "Expands the node and add the resulting nodes to search tree"
-        if current_node.state not in visited:
-            visited.add(current_node.state)
-            for node_to_expand in current_node.expand(problem):
-                if node_to_expand.state not in visited:
-                    fringe.push(node_to_expand)
+        try:
+            in_visited = current_node.state in visited
+        except:
+            visited = list(visited)
+            in_visited = current_node.state in visited
+
+        if not in_visited:
+            if isinstance(visited, list):
+                visited.append(current_node.state)
+            else:
+                visited.add(current_node.state)
+            next_nodes = current_node.expand(problem)
+
+            for next_node in next_nodes:
+                fringe.push(next_node)
+
+        # "Expands the node and add the resulting nodes to search tree"
+        # if current_node.state not in visited:
+        #     visited.add(current_node.state)
+        #     for node_to_expand in current_node.expand(problem):
+        #         if node_to_expand.state not in visited:
+        #             fringe.push(node_to_expand)
     return None
 
 
