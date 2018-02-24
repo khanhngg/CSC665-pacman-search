@@ -375,17 +375,45 @@ def cornersHeuristic(state, problem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    unvisited_corners = []
+    visited_corners = state[1]
+    current_state = state[0]
+    result = 0
 
-    "*** YOUR CODE HERE ***"
-    closest_goal_distance = sys.maxint
-
+    "List of corners that the current state has not visited yet"
+    "Find the manhattan distance from the current state to the next closest corner"
+    closest_corner = None
     for corner in corners:
-        if not corner in state[1]:
-            current_distance = abs(state[0][0] - corner[0]) + abs(state[0][1] - corner[1])
-            if closest_goal_distance > current_distance:
-                closest_goal_distance = current_distance
+        if corner not in visited_corners:
+            unvisited_corners.append(corner)
 
-    return closest_goal_distance
+    if not unvisited_corners:
+        closest_corner_distance = 0
+    else:
+        closest_corner_distance = sys.maxint
+
+    for corner in unvisited_corners:
+        current_distance = util.manhattanDistance(current_state, corner)
+        if current_distance < closest_corner_distance:
+            closest_corner_distance = current_distance
+            closest_corner = corner
+
+    if closest_corner:
+        unvisited_corners.remove(closest_corner)
+
+    while unvisited_corners:
+        next_closest_corner = unvisited_corners[0]
+        next_min_distance = sys.maxint
+        for unvisited_corner in unvisited_corners:
+            current_distance = util.manhattanDistance(closest_corner, unvisited_corner)
+            if current_distance < next_min_distance:
+                next_min_distance = current_distance
+                next_closest_corner = unvisited_corner
+        closest_corner = next_closest_corner
+        result += next_min_distance
+        unvisited_corners.remove(next_closest_corner)
+
+    return closest_corner_distance + result
 
 
 class AStarCornersAgent(SearchAgent):
