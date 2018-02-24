@@ -388,9 +388,9 @@ def cornersHeuristic(state, problem):
             unvisited_corners.append(corner)
 
     if not unvisited_corners:
-        closest_corner_distance = 0
-    else:
-        closest_corner_distance = sys.maxint
+        return 0
+
+    closest_corner_distance = sys.maxint
 
     for corner in unvisited_corners:
         current_distance = util.manhattanDistance(current_state, corner)
@@ -404,11 +404,13 @@ def cornersHeuristic(state, problem):
     while unvisited_corners:
         next_closest_corner = unvisited_corners[0]
         next_min_distance = sys.maxint
+
         for unvisited_corner in unvisited_corners:
             current_distance = util.manhattanDistance(closest_corner, unvisited_corner)
             if current_distance < next_min_distance:
                 next_min_distance = current_distance
                 next_closest_corner = unvisited_corner
+
         closest_corner = next_closest_corner
         result += next_min_distance
         unvisited_corners.remove(next_closest_corner)
