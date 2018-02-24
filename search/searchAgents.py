@@ -381,7 +381,6 @@ def cornersHeuristic(state, problem):
     result = 0
 
     "List of corners that the current state has not visited yet"
-    "Find the manhattan distance from the current state to the next closest corner"
     closest_corner = None
     for corner in corners:
         if corner not in visited_corners:
@@ -393,7 +392,7 @@ def cornersHeuristic(state, problem):
 
     closest_corner_distance = sys.maxint
 
-    "Find the closest corner to current state"
+    "Find the manhattan distance from the current state to the next closest corner"
     for corner in unvisited_corners:
         current_distance = util.manhattanDistance(current_state, corner)
         if current_distance < closest_corner_distance:
@@ -526,8 +525,18 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+
+    result = 0
+    foods = foodGrid.asList()
+
+    if len(foods) == 0:
+        return 0
+
+    for food in foods:
+        distance_to_food = mazeDistance(position, food, problem.startingGameState)
+        if distance_to_food > result:
+            result = distance_to_food
+    return result
 
 
 class ClosestDotSearchAgent(SearchAgent):
