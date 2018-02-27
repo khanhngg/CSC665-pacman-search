@@ -534,13 +534,16 @@ def foodHeuristic(state, problem):
     unvisited_foods = []
     result = 0
 
-    closest_food = None
     for food in foods:
         unvisited_foods.append(food)
 
-    "Since current state has visited all corners, heuristics is 0"
+    "Since current state has eaten all foods, heuristics is 0"
     if not unvisited_foods:
         return 0
+
+    "If one food left, simply just the distance to that last food"
+    if len(unvisited_foods) == 1:
+        return util.manhattanDistance(position, unvisited_foods[0])
 
     closest_food_distance = sys.maxint
 
@@ -549,19 +552,15 @@ def foodHeuristic(state, problem):
         current_distance = util.manhattanDistance(position, food)
         if current_distance < closest_food_distance:
             closest_food_distance = current_distance
-            closest_food = food
-
-    "Remove the current closest corner from unvisited list"
-    if closest_food:
-        unvisited_foods.remove(closest_food)
 
     """
-    Find the min sum of distances between the unvisited corners to the current closest corner.
-    If found a min manhattan distance between the next and current closest corner,
+    Find the min sum of distances between the unvisited foods.
+    If found a min manhattan distance between the next and current closest food,
      - the next one will become the current one in the next iteration.
-     - remove the next one from unvisited corners
-    Repeat until all corners are visited in the sum distance calculation.
+     - remove the next one from unvisited foods
+    Repeat until all foods are eaten in the sum distance calculation.
     """
+    closest_food = unvisited_foods[0]
     while unvisited_foods:
         next_closest_food = unvisited_foods[0]
         next_min_distance = sys.maxint
@@ -577,10 +576,11 @@ def foodHeuristic(state, problem):
         unvisited_foods.remove(next_closest_food)
 
     """
-    Heuristics is sum of distances between current state to closest corner 
-    and closest corner to the other corners
+    Heuristics is sum of distances between current state to closest food 
+    and closest food to the other foods
     """
     return closest_food_distance + result
+
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
