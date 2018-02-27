@@ -525,17 +525,20 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-
-    result = 0
     foods = foodGrid.asList()
 
+    # reach goal state, no more food to eat
     if len(foods) == 0:
         return 0
 
+    result = sys.maxint
+
+    # from current position, find the shortest path to the furthest food on map
     for food in foods:
-        distance_to_food = mazeDistance(position, food, problem.startingGameState)
-        if distance_to_food > result:
-            result = distance_to_food
+        furthest_food_distance = util.manhattanDistance(position, food)
+        if furthest_food_distance < result:
+            result = furthest_food_distance
+
     return result
 
 
